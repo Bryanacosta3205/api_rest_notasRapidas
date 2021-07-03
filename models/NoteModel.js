@@ -1,9 +1,9 @@
 const db = require("../database")
-const TasksModel = {}
+const NoteModel = {}
 
-TasksModel.getAll = (uID,callback) => {
+NoteModel.getAll = (callback) => {
   db.select('*')
-    .from("usuario_tarea")
+    .from("note")
     .then( (data) => { 
       callback({
         status: "Ok",
@@ -19,30 +19,29 @@ TasksModel.getAll = (uID,callback) => {
     })
 }
 
-
-TasksModel.newTask = (params,callback) => {
-   db.raw('Call sp_usuario_tarea(?,?,?,?,?)',[params.uID, params.task.idMateria,params.task.title,params.task.content,params.task.dueDate])
-    .then((data)=>{
-      callback({
-        status: "Ok",
-        message:"La tarea fue añadida correctamente",
-        data: data
-      })
-    })
-    .catch((error)=>{
-      callback({
-        status: "error",
-        message: 'Ha ocurrido un error en el servidor',
-        error: error
-      })
-    }) 
+NoteModel.newNote = ({title=null,body=null,color=null},callback) => {
+  db('note').insert({title,body,color})
+   .then((data)=>{
+     callback({
+       status: "Ok",
+       message:"La tarea fue añadida correctamente",
+       data
+     })
+   })
+   .catch((error)=>{
+     callback({
+       status: "error",
+       message: 'Ha ocurrido un error en el servidor',
+       error:error.sqlMessage
+     })
+   }) 
 
 }
 
-TasksModel.updateTask= (params,callback) => {
-  db.table('tarea')
-  .where('id','=',params.idTarea)
-  .update({idmateria:params.tarea.idMateria, title:params.tarea.title,content:params.tarea.content,idEstado :params.tarea.idEstado,idPrioridad :params.tarea.idPrioridad,dueDate : params.tarea.dueDate})
+NoteModel.updateNote= ({id,data},callback) => {
+  db.table('note')
+  .where('id','=',id)
+  .update({title:data.title, body:data.body,color:data.color})
   .then((data)=>{
     callback({
       status: "Ok",
@@ -60,9 +59,8 @@ TasksModel.updateTask= (params,callback) => {
 
 }
 
-
-TasksModel.deleteTask= (params,callback) => {
-  db.table('tarea')
+NoteModel.deleteNote= (params,callback) => {
+  db.table('note')
   .where('id','=',params)
   .del()
   .then((data)=>{
@@ -94,16 +92,33 @@ TasksModel.deleteTask= (params,callback) => {
 }
 
 
+/* 
+
+
+TasksModel.updateTask= (params,callback) => {
+  db.table('tarea')
+  .where('id','=',params.idTarea)
+  .update({idmateria:params.tarea.idMateria, title:params.tarea.title,content:params.tarea.content,idEstado :params.tarea.idEstado,idPrioridad :params.tarea.idPrioridad,dueDate : params.tarea.dueDate})
+  .then((data)=>{
+    callback({
+      status: "Ok",
+      message:"La tarea fue actualizada correctamente",
+      data: data
+    })
+  })
+  .catch((error)=>{
+    callback({
+      status: "error",
+      message: 'Ha ocurrido un error en el servidor',
+      error: error
+    })
+  }) 
+
+}
 
 
 
-
-
-
-
-
-
-
-module.exports = TasksModel;
+ */
+module.exports = NoteModel;
 
 
