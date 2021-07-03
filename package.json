@@ -1,0 +1,20 @@
+{
+  "name": "notes_rest",
+  "version": "1.0.0",
+  "description": "api rest de notas rapidas",
+  "main": "app.js",
+  "scripts": {
+    "start":"nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "bryan acosta",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "knex": "^0.95.6",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.9"
+  }
+}
